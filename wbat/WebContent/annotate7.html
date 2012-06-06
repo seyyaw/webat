@@ -1,0 +1,146 @@
+<html lang="de"> 
+<META HTTP-EQUIV="content-type" CONTENT="text/html; charset=utf-8">
+
+<head>
+
+<title>User selection text and its use</title>
+
+</head>
+
+<body>
+<div id="my-text">
+Prävalenz steigt ab dem 70. Lebensjahr
+Erkenntnisse liefern die Versorgungsdaten, die jetzt in einem Update des Versorgungsatlas zusammengefasst sind, auch zum Altersverlauf von Depressionen. So steigt die Prävalenz zunächst vom 18. bis zum 60. Lebensjahr fast linear an (von 1,3 auf 9,4 Prozent bei Männern und von 3,0 auf 17,9 Prozent bei Frauen), fällt dann aber mit Renteneintrittsalter wieder um etwa drei Prozentpunkte ab.
+Dies widerspricht der oft <strike>geäuß<strong>erten </strike>geäußerten </strong>Vermutung, dass Berufstätige mit dem Ende des Arbeitslebens in eine Sinnkrise geraten; die Rente scheint eher antidepressiv zu wirken.
+Allerdings ist die Freude nur von kurzer Dauer: Ab dem 70. Lebensjahr steigt die Prävalenz wieder an und erreicht Höchstwerte von 11,2 Prozent bei 90-jährigen Männern sowie 19 Prozent bei 85-jährigen Frauen.
+<hr><br>
+</div>
+	<form id="form1" runat="server">
+        <div>
+            <input id="Button1" type="button" value="button" />
+        </div>
+    </form>
+</body>
+</html>
+
+
+<style type="text/css">
+::-moz-selection {
+    background: #ffb7b7; /* Firefox */
+}
+.highlight {background-color: rgb(0,255,0)}
+
+</style>
+
+
+
+<script type="text/javascript" src="resource/jquery-1.7.2.min.js" ></script>
+
+<script>
+
+var startPosition = [];
+var endPosition = [];
+var markedText = [];
+function getSelected(event) {
+    return window.getSelection();      
+        }
+
+$(document).ready(function() {
+    $('#my-text').mouseup(function(e) {
+    	//alert(randomColor());
+    	//alert('Start'+ getSelectionCharOffsetsWithin(document.body).start + 
+    		//	' End' + getSelectionCharOffsetsWithin(document.body).end );
+    //alert($('#my-text').text().substring(getSelectionCharOffsetsWithin(document.body).start-1,getSelectionCharOffsetsWithin(document.body).end-1));
+    var starting = getSelectionCharOffsetsWithin(document.body).start;
+    var ending = getSelectionCharOffsetsWithin(document.body).end;
+    var hilitedText = $('#my-text').text().substring(starting-1,ending-1)
+    if(!(starting == ending)){
+    	 startPosition.push(starting);
+    	    endPosition.push(ending);
+    	    markedText.push(hilitedText);
+    }
+   
+   
+    //highlight(randomColor());
+   highlight("#ffb7b7");
+    });
+    
+    function randomColor(){
+    	return '#'+Math.floor(Math.random()*16777216).toString(16);
+    	}
+    
+    function makeEditableAndHighlight(colour) {
+        var range, sel = window.getSelection();
+        if (sel.rangeCount && sel.getRangeAt) {
+            range = sel.getRangeAt(0);
+        }
+        document.designMode = "on";
+        if (range) {
+            sel.removeAllRanges();
+            sel.addRange(range);
+        }
+        // Use HiliteColor since some browsers apply BackColor to the whole block
+        if (!document.execCommand("HiliteColor", false, colour)) {
+            document.execCommand("BackColor", false, colour);
+        }
+        document.designMode = "off";
+    }
+
+    function highlight(colour) {
+        var range, sel;
+            try {
+                if (!document.execCommand("BackColor", false, colour)) {
+                    makeEditableAndHighlight(colour);
+                }
+            } catch (ex) {
+                makeEditableAndHighlight(colour)
+            }
+    }
+
+    
+    function getSelectionCharOffsetsWithin(element) {
+        var start = 0, end = 0;
+        var sel, range, priorRange;
+        
+            range = window.getSelection().getRangeAt(0);
+            priorRange = range.cloneRange();
+            priorRange.selectNodeContents(element);
+            priorRange.setEnd(range.startContainer, range.startOffset);
+            start = priorRange.toString().length;
+            end = start + range.toString().length;
+     
+        return {
+            start: start,
+            end: end
+        };
+    }
+     
+    $("#Button1").click( function(){
+    	var jsonObj = {}; 
+	
+        for (var i = 0; i < startPosition.length; i++) {
+          // jsonObj.push({startingpos: startPosition[i], endingpos:endPosition[i], markedTxt:markedText[i]});
+           jsonObj[i].startingpos = startPosition[i];
+           jsonObj[i].endingpos = endPosition[i]
+           jsonObj[i].markedTxt = markedText[i];
+        //	$.extend(jsonObj, {'startingpos': startPosition[i], 'endingpos':endPosition[i], 'markedTxt':markedText[i]});
+        }
+		
+    	$.ajax({
+		    type: "POST",
+		    url:  "wbat",
+		    data:  jsonObj,
+		    dataType: "json",
+		    processData: false,
+		    success: function (response) {	
+		    		alert (response);
+		    }
+			});	
+        		   
+    	console.info(jsonObj);
+   });
+  
+
+
+});
+</script>

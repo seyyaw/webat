@@ -1,0 +1,24 @@
+<head>
+<script type="text/javascript">
+function show_coords(event)
+{
+x=event.clientX;
+y=event.clientY;
+document.getElementById("one").innerHTML='X coords: ' + x + ', Y coords: ' + y;
+}
+
+function show_coords2(event)
+{
+x=event.clientX;
+y=event.clientY;
+var newb= document.getElementById("one").innerHTML+'<br/>'+'X coords: ' + x + ', Y coords: ' + y;
+document.getElementById("one").innerHTML=newb;
+}
+</script>
+</head>
+
+<body onMouseDown="show_coords(event)" onMouseUp="show_coords2(event)">
+
+<p id="one">Click in the document to see the co-ordinates of the selected text</p>
+
+</body>

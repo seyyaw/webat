@@ -1,0 +1,31 @@
+<HEAD>
+<SCRIPT>
+// Code for dynamically adding options to a select.
+function ShowResults()
+{				// Information about the events 
+				 // and what object fired them.
+  arg = event.type + "  fired by  " + event.srcElement.id;  
+  var oNewOption = new Option(); 
+  oNewOption.text = arg;
+  oResults.add(oNewOption,0);
+}
+</SCRIPT>
+</HEAD>
+<BODY>
+<P>Source events are wired up to this text box.</P>
+<INPUT ID=txtDragOrigin VALUE="Text to Drag"
+    ondragstart="ShowResults()"
+    ondrag="ShowResults()"
+    ondragend="ShowResults()"
+>
+<P>Target events are bound to this text box.</P>
+<INPUT ID=txtDragDestination VALUE="Drag Destination"
+    ondragenter="ShowResults()"
+    ondragover="ShowResults()"
+    ondragleave="ShowResults()"
+    ondrop="ShowResults()"
+>
+<SELECT ID=oResults SIZE=30>
+  <OPTION>List of Events Fired
+</SELECT>
+</BODY>
