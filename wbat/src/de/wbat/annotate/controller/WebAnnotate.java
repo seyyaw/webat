@@ -1,9 +1,6 @@
 package de.wbat.annotate.controller;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.util.Iterator;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -11,8 +8,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
-import org.json.JSONTokener;
 import org.json.JSONWriter;
 
 
@@ -21,6 +16,7 @@ import org.json.JSONWriter;
 
 /**
  * Servlet implementation class WebAnnotate
+ * @author Seid M.
  */
 public class WebAnnotate extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -44,7 +40,6 @@ public class WebAnnotate extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		try {
-			System.out.println("here");
 			JSONArray jsonMarkedinfo = new JSONArray( request.getParameter("markUpInfo"));
 			System.out.println(jsonMarkedinfo);
 			
