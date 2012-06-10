@@ -77,7 +77,7 @@ var checkDuplicate = [];//array for duplicate detection.
 					overlapStarting <= ending){//checks overlap
 					
 					//delete old marker and extend new marker
-					removeMarkupAnnotation(overlapPosition);
+					//removeMarkupAnnotation(overlapPosition);
 					addMarkupAnnotation(starting,overlapEnding,markup);
 				}
 				
@@ -87,7 +87,7 @@ var checkDuplicate = [];//array for duplicate detection.
 						overlapEnding >= starting){//checks overlap
 					
 					//delete old marker and extends the new marker
-					removeMarkupAnnotation(overlapPosition);
+					//removeMarkupAnnotation(overlapPosition);
 					addMarkupAnnotation(overlapStarting,ending,markup);
 					
 				}
@@ -97,7 +97,7 @@ var checkDuplicate = [];//array for duplicate detection.
 						overlapEnding < ending){
 					
 					//delete old marker extends the new marker
-					removeMarkupAnnotation(overlapPosition);
+					//removeMarkupAnnotation(overlapPosition);
 					addMarkupAnnotation(starting,ending,markup);
 				}
 			}//End overlap
@@ -122,17 +122,31 @@ var checkDuplicate = [];//array for duplicate detection.
 			for ( var i = 0; i < startPosition.length; i++){
 				if (startPosition[i]>=starting &&
 						endPosition[i]>=ending &&
-						startPosition[i] <= ending) {
+						startPosition[i] <= ending &&
+						markupType[i] == markup) {
 					
 					tempEnds.push(endPosition[i]);// to compare later the larger span
 					removeMarkupAnnotation(i);
+					i = i-1;//update i as one element already deleted
 				}
+				//left extreme marker removal
 				else if (startPosition[i]<=starting && 
 						 endPosition[i] <= ending && 
-						 endPosition[i] >= starting) {
+						 endPosition[i] >= starting &&
+						 markupType[i] == markup) {
 					
 					tempStarts.push(startPosition[i]);// to compare later the larger span
 					removeMarkupAnnotation(i);
+					i = i-1;//update i as one element already deleted
+				}
+				//subsumed marker removal
+				else if (startPosition[i]>=starting && 
+						 endPosition[i] <= ending && 
+						 markupType[i] == markup) {
+					
+					tempStarts.push(startPosition[i]);// to compare later the larger span
+					removeMarkupAnnotation(i);
+					i = i-1;//update i as one element already deleted
 				}
 			}
 			
