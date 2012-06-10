@@ -4,23 +4,24 @@
  * 
  */	
 //global variables
-var startPosition = []; //array containing starting positions of markups
-var endPosition = [];  //array containing ending positions of markups
+var startPosition = []; //array containing starting positions of markers
+var endPosition = [];  //array containing ending positions of markers
 var markedText = []; //array containing marked texts
-var markupType = [];//array containing type of markups
+var markupType = [];//array containing type of markers
 var checkDuplicate = [];//array for duplicate detection.
 
-	//seven predefined markup colors for possible 7 annotations.
+	//seven predefined markers of colors for possible 7 annotations.
 	var colors = ["#FFFF00","#808080","#800080","#008000","#0000FF","#00FFFF","#FF00FF"];
 	$(document).ready(function() {
-		//trigered when click-drag is over
+		
+		//trigered when click-drag is finished
 		$('#sampletext').mouseup(function(e) {
 			
-			//variable to contain the selected radio button value for marking up documents
-			//value is similar to ...mark0,mark1,....
+			//variable to contain the selected radio button value for marking documents
+			//value are similar to ...mark0,mark1,....
 			var selectetMarkUp = $("#markupRbtn input[type='radio']:checked").val();
 			
-			//color for marking up a text. get the integer part of the value of selected 
+			//color for marking a text. get the integer part of the value of selected 
 			//radio button and assign color from the array  <b> colors </b>
 			
 			markColor = colors[selectetMarkUp.substring(4)];
@@ -32,38 +33,38 @@ var checkDuplicate = [];//array for duplicate detection.
 			var starting = getSelectionCharOffsetsWithin(document.getElementById("sampletext")).start;
 			var ending = getSelectionCharOffsetsWithin(document.getElementById("sampletext")).end;
 			
-			//detect duplicate markups and urge users if they need to remove markup
+			//detect duplicate markers and urge users if they need to remove marker
 			var duplicate = starting+ ' ' + ending + ' ' +markup ; // no duplicate markup should be stored in the json data!
 			
 			//do nothing, user didn't select anything / or it is blank
-			var temSelText = $('#sampletext').text().substring(starting,ending).trim();
-			//temSelText = temSelText.substring(starting,ending);
+			var tempSelText = $('#sampletext').text().substring(starting,ending).trim();
 			
-			if (starting == ending || temSelText == "" ){}
+			
+			if (starting == ending || tempSelText == "" ){}
 			
 			else if($.inArray(duplicate, checkDuplicate) > -1){ 
 						
 				if(confirm('remove marker?')){ //if user prefers to remove highlight.
 					var pos = $.inArray(duplicate, checkDuplicate);
 					removeMarkupAnnotation(pos);
-					//change background color to white - this might be complex for overlapped markups as the user can't see 
-					//the covered markups
+					//change background color to white - this might be complex for overlapped markers as the user can't see 
+					//the covered markers
 					highlight("white");
 					
-				}
-				
+				}		
 			}
 			/*
-			 * detect possible extensions or duplicates of markups, only for the same class of markups, and modify the annotation accordingly
+			 * detect possible extensions or duplicates of markers, 
+			 * only for the same class of markers, and modify the annotation accordingly
 			 */
 			else if(checkOverlap(starting,ending, markup).overlap){
-				//starting and ending position of the previous markup which is overlaped with the current one
+				//starting and ending position of the previous markers which is overlapped with the current one
 				//and the name of the annotation marker
 				var overlapStarting = checkOverlap(starting,ending, markup).overlapStart;
 				var overlapEnding = checkOverlap(starting,ending, markup).overlapEnd;
 				var overlapPosition = checkOverlap(starting,ending, markup).position;
 				
-				//if the user selects a portion that has already marked with the same markup type
+				//if the user selects a portion that has already marked with the same marker type
 				// no need to redraw.
 				if(overlapStarting <= starting && overlapEnding >= ending){
 					alert("This portion already annotated with the selected marker ");
@@ -75,7 +76,7 @@ var checkDuplicate = [];//array for duplicate detection.
 						overlapEnding >= ending && //checks range
 					overlapStarting <= ending){//checks overlap
 					
-					//delete old markup and extend new markup
+					//delete old marker and extend new marker
 					removeMarkupAnnotation(overlapPosition);
 					addMarkupAnnotation(starting,overlapEnding,markup);
 				}
@@ -85,34 +86,60 @@ var checkDuplicate = [];//array for duplicate detection.
 						overlapEnding <= ending &&
 						overlapEnding >= starting){//checks overlap
 					
-					//delete old markup and extends the new markup
+					//delete old marker and extends the new marker
 					removeMarkupAnnotation(overlapPosition);
 					addMarkupAnnotation(overlapStarting,ending,markup);
 					
 				}
-				//checks subsumption, additional annotations to the left and right of the existing markup
+				//checks subsumption, additional annotations to the
+				//left and right of the existing marker
 				else if(overlapStarting > starting && 
 						overlapEnding < ending){
 					
-					//delete old markup extends the new markup
+					//delete old marker extends the new marker
 					removeMarkupAnnotation(overlapPosition);
 					addMarkupAnnotation(starting,ending,markup);
 				}
 			}//End overlap
 			
-			//new markup
+			//new marker
 			else {
 				addMarkupAnnotation(starting, ending,markup);
 			}
 			});
 		
 		/*
-		 * This function add markup annotaion informations to different arrays, 
+		 * This function add marker annotation information to different arrays, 
 		 * which shall be used later on for overlap detection, json data preparation and so on.
 		 */
 		function addMarkupAnnotation (starting, ending, markup) {
 			
-			//selected text (or portions added to the existing markup
+			/* in the case of continues marker extending, delete all 
+			 * old extensions and merge into one
+			 */
+			var tempStarts = [starting];
+			var tempEnds = [ending];
+			for ( var i = 0; i < startPosition.length; i++){
+				if (startPosition[i]>=starting &&
+						endPosition[i]>=ending &&
+						startPosition[i] <= ending) {
+					
+					tempEnds.push(endPosition[i]);// to compare later the larger span
+					removeMarkupAnnotation(i);
+				}
+				else if (startPosition[i]<=starting && 
+						 endPosition[i] <= ending && 
+						 endPosition[i] >= starting) {
+					
+					tempStarts.push(startPosition[i]);// to compare later the larger span
+					removeMarkupAnnotation(i);
+				}
+			}
+			
+			starting = Math.min.apply(this, tempStarts);
+			ending = Math.max.apply(this, tempEnds);
+			
+			//selected text (or portions added to the existing marker
 			var hilitedText = $('#sampletext').text().substring(starting, ending); 
 			duplicate = starting+ ' ' + ending + ' ' +markup ;
 			
@@ -128,7 +155,7 @@ var checkDuplicate = [];//array for duplicate detection.
 		
 		
 		/*
-		 * This function removes existing markup if there need be some extensions
+		 * This function removes existing marker if there need be some extensions
 		 */
 		function removeMarkupAnnotation(position){
 			
@@ -198,13 +225,14 @@ var checkDuplicate = [];//array for duplicate detection.
 			
 			
 			/*
-			 * If there is an overlpap for same markup, return the two extreme end points
+			 *  If there is an overlap for same marker, 
+			 *  return the old markers starting and ending positions
 			 */
 			
 			function checkOverlap(starting, ending, markup){
 				for (var i = 0;i<startPosition.length;i++){
+					
 					// overlaps like=>  StartOld..StartNew ...EndNew...EndOld,  ...
-					//returns StartOld, EndOld
 					if(startPosition[i] <= starting && endPosition[i]>= ending && markupType[i] == markup){
 						
 						return {
@@ -213,8 +241,8 @@ var checkDuplicate = [];//array for duplicate detection.
 							overlapEnd:endPosition[i],
 							position:i
 							};
+							
 					}// overlaps like=> StartNew ... StartOld...EndNew...EndOld
-					//returns StartNew,EndOld
 					else if(starting < startPosition[i] && ending >= startPosition[i] && ending <= endPosition[i] && markupType[i] == markup){
 						
 						return {
@@ -223,6 +251,7 @@ var checkDuplicate = [];//array for duplicate detection.
 							overlapEnd:endPosition[i],
 							position:i
 							};
+							
 					}// overlaps like=>StartOld...StartNew...EndOld...EndNew
 					else if( starting >= startPosition[i] && ending > endPosition[i] && endPosition[i] >= starting && markupType[i] == markup){
 						return {
@@ -232,6 +261,7 @@ var checkDuplicate = [];//array for duplicate detection.
 							position:i
 							};
 					}
+					
 					// overlaps like=> StartNew ... StartOld...EndOld... EndNew...
 					//returns StartNew,EndOld
 					else if( starting < startPosition[i] && ending > endPosition[i] && markupType[i] == markup){
@@ -253,12 +283,12 @@ var checkDuplicate = [];//array for duplicate detection.
 			 * below are some of the event functions used for 
 			 * 1)sending data to the server
 			 * 2) refreshing the page and
-			 * 3) creating additional radiobuttons for markup
+			 * 3) creating additional radiobuttons for marker
 			 */
 			
 			
 			/*
-			 * 	Send the Json data (markup text with start/end positions to the server using Ajax.)
+			 * 	Send the Json data (mark text with start/end positions to the server using Ajax.)
 			*/
 			$("#submit").click(function() {
 				if(startPosition.length == 0){
@@ -270,7 +300,7 @@ var checkDuplicate = [];//array for duplicate detection.
 					*/
 					var jsonMarkUpObj = [];
 					for ( var i = 0; i < startPosition.length; i++) {
-						jsonMarkUpObj.push({startingpos : startPosition[i], 
+							jsonMarkUpObj.push({startingpos : startPosition[i], 
 							endingpos : endPosition[i],	
 							markedText : markedText[i],
 							markupType:markupType[i]});
@@ -290,19 +320,22 @@ var checkDuplicate = [];//array for duplicate detection.
 						});
 				}
 			});
+			
+			
 			/*
-			Refresh page, hence new markup to be created
+			Refresh page, hence new marker to be created
 			*/
+			
 			$('#refresh').click(function() {
 				  location.reload();
 				});
 			
 			/*
-			 * create new radio buttons for additional markups
+			 * create new radio buttons for additional markers
 			 */
 			$('#createRbtn').click(function() {
 				if($("#annotatinName").val()==""){
-					alert("Invalid marker !Please type in the name of your marker")
+					alert("Invalid marker ! Please type in the name of your marker")
 				}
 				else{
 				var countRbtn = 0;
