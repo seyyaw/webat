@@ -1,0 +1,42 @@
+
+::-moz-selection {
+	background: #ffb7b7; /* Firefox */
+}
+.highlight {background-color: rgb(0,255,0)}
+
+ span.highlighted {
+     background-color: yellow;
+ }
+ div.header {
+	position: absolute;
+	top: 15px;
+	padding: 10px;
+	height: 50px;
+	width: 90%;
+	border: 1px solid blue;
+	text-align: center;
+	font-size: 18;
+	font-family: sans-serif;
+}
+
+ div.left {
+	padding: 10px;
+	position: absolute;
+	left: 5px;
+	top: 100px;
+	width: 150px;
+	height: relative;
+	border: 1px solid blue;
+}
+
+div#sampletext {
+	padding: 10px;
+	position: absolute;
+	top: 100px;
+	left: 190px;
+	height: relative;
+	width: 1073px;
+	border: 1px solid blue;
+}
+
+ 
