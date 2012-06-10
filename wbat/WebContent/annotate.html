@@ -5,72 +5,64 @@
 
 <title>Marking/Annotating Texts using mouse selection or double click </title>
 
-<link rel="stylesheet" href="resource/annotate.css" type="text/css"
+<link rel="stylesheet" href="styles/annotate.css" type="text/css"
 media="screen"/>
 
-<script type="text/javascript" src="resource/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="scripts/jquery-1.7.2.min.js"></script>
+
+
+<!-- 
+Load Text from file to the div
+ -->
+<script type="text/javascript" src="scripts/loadTextFile.js"></script> 
 <!-- Here, we have different javascripts (jquery) and ajax functions 
 script includes  getting the selected text, geting index of selected text, 
 higlighting the text selected and so on..... -->
 
-<script type="text/javascript" src="resource/annotate.js"></script>
+<script type="text/javascript" src="scripts/annotate.js"></script>
 
 </head>
 
 <body>
-	<hr>
-	<br>
+	<div class="header">
+	
+			Annotate the following document with different markers.
+			If the marker you need is not in the list of marker in the left panel you can create 
+			your own marker by typing it's name and clicking on 
+			<span style="color:blue">  create marker</span> button.
+		
+		</div>
+
+	<div class="left">
+		<div>
+			<div>
+				<input type="text" id="annotatinName"></input>
+				<input id="createRbtn" type="button" value="create marker " />
+			</div>
+			Choose markers
+			<div id="markupRbtn">
+				<p><input type="radio" name="markup" value="mark0" checked="true" ><span id="mark0"> Person</span></input>
+						<input type="text" size="2" style="background-color:#FFFF00;" disabled="disabled"></input>
+				</p>
+				<p><input type="radio" name="markup" value="mark1"><span id="mark1"> Organization</span></input>
+					<input type="text" size="2" style="background-color:#808080;" disabled="disabled"></input>
+				</p>
+				<p><input type="radio" name="markup" value="mark2"><span id="mark2">Location</span></input>
+					<input type="text" size="2" style="background-color:#800080;" disabled="disabled"></input>
+				</p>
+			</div>
+			
+			<input id="submit" type="button" value="submit" />
+			<input id="refresh" type="button" value="refresh" />
+		</div>
+		
+	</div>
+	
+	
 	<div id="sampletext">
-		Das Präsidium der Technischen Universität Darmstadt Die autonome
-		Technische Universität Darmstadt wird von einem Präsidium geleitet. Es
-		setzt sich zusammen aus dem Präsidenten, zwei Vizepräsidenten, einer
-		Vizepräsidentin und dem Kanzler. Das Präsidium stimmt sich bei der
-		systematischen Weiterentwicklung der Universität eng mit Gremien wie
-		dem Hochschulrat, dem Senat, der Universitätsversammlung sowie den
-		Fachbereichen und Mitgliedern der Universität ab und berichtet
-		jährlich dem Hessischen Landtag. Präsident Professor Dr. Hans Jürgen
-		Prömel verantwortet die Universitätsstrategie und -struktur, die
-		Berufung von Professorinnen und Professoren, die Ressorts Forschung
-		und wissenschaftlicher Nachwuchs, Qualitätsmanagement und
-		Internationale Beziehungen sowie die Vertretung nach außen gegenüber
-		Politik, Gesellschaft und anderen Anspruchsgruppen. weiter Kanzler Dr.
-		Manfred Efinger verantwortet die Ressorts Haushalt, Personal,
-		Immobilien, Bau-Infrastruktur und Rechtsangelegenheiten. weiter
-		Vizepräsidentin Professorin Dr. Petra Gehring trägt Verantwortung für
-		wissenschaftliche Infrastruktur (Universitätsbibliothek,
-		Rechenzentrum, Neue Medien, E-Learning), für Interdisziplinäre Kultur
-		sowie für Lehrerbildung. weiter Vizepräsident Professor Dr.-Ing.
-		Holger Hanselka zeichnet verantwortlich für die Ressorts Wissens- und
-		Technologietransfer, Kooperationsbeziehungen zu Wirtschaft und
-		Wissenschaft, Unternehmensgründungen und Patentmanagement, Alumni und
-		Fundraising. weiter Vizepräsident Professor Dr.-Ing. Christoph Motzko
-		verantwortet sämtliche Aufgaben in Studium, Lehre und Weiterbildung.
-		weiter Willkommen an der Technischen Universität Darmstadt Wir tragen
-		mit unseren Leistungen in Forschung und Bildung dazu bei,
-		entscheidende Zukunftsfragen zu beantworten. Die Herausforderungen
-		einer nachhaltigen Entwicklung von Gesellschaft und Wirtschaft sind
-		nur zu meistern, wenn wir Technik weiter und neu vernetzt denken und
-		einsetzen. Die Technische Universität Darmstadt konzentriert sich auf
-		technikbezogene Fragestellungen, erprobt dabei neue Wege und eröffnet
-		neue Chancen. Unsere Wissenschaftlerinnen und Wissenschafter leisten
-		wegweisende grundlegende Forschung. Sie setzen ihre Erkenntnisse
-		kreativ in technologische Lösungen um. Sie schaffen Technik, die sich
-		intelligent in komplexe Anwendungszusammenhänge einfügt. Unsere
-		Studierenden lernen im Studium von Anfang an, hervorragende Forschung
-		und praktische Relevanz zusammenzuführen. Ich sehe es als eine der
-		globalen Zukunftsaufgaben von Wissenschaft an, Voraussetzungen für
-		langfristig tragfähigen Wohlstand zu schaffen. Die TU Darmstadt ist
-		eine der führenden Technischen Universitäten in Deutschland und
-		weltweit für ihre Pionierleistungen bekannt. Sie stellt sich den
-		künftigen Herausforderungen – durch exzellente Forschung in
-		ausgewählten Feldern und durch eine Ausbildung auf höchstem Niveau.
-		<hr>
-		<br>
 	</div>
-	<div>
-		<input id="submit" type="button" value="submit" />
-		<input id="refresh" type="button" value="refresh" />
-	</div>
+	
+
 </body>
 </html>
 <!--  The latest JQuery Library -->
